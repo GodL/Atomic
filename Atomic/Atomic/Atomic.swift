@@ -145,5 +145,96 @@ public final class Atomic<Value> {
             return old
         }
     }
+}
+
+public struct UnsafeAtomic<Value> {
+    private let point: UnsafeMutablePointer<Value> = UnsafeMutablePointer<Value>.allocate(capacity: 1)
     
+    public var value: Value {
+        point.pointee
+    }
+    
+    public func deinititalize() {
+        point.deinitialize(count: 1)
+        point.deallocate()
+    }
+}
+
+extension UnsafeAtomic where Value == Int32 {
+    
+    init(_ value: Value) {
+        point.initialize(to: value)
+    }
+    
+    @discardableResult
+    public func increment() -> Value {
+        return OSAtomicIncrement32Barrier(point)
+    }
+    
+    @discardableResult
+    public func decrement() -> Value {
+        return OSAtomicDecrement32Barrier(point)
+    }
+    
+    @discardableResult
+    public func cas(old: Value,new: Value) -> Bool {
+        return OSAtomicCompareAndSwap32Barrier(old, new, point)
+    }
+}
+
+extension UnsafeAtomic where Value == Int64 {
+    init(_ value: Value) {
+        point.initialize(to: value)
+    }
+    
+    @discardableResult
+    public func increment() -> Value {
+        return OSAtomicIncrement64Barrier(point)
+    }
+    
+    @discardableResult
+    public func decrement() -> Value {
+        return OSAtomicDecrement64Barrier(point)
+    }
+    
+    @discardableResult
+    public func cas(old: Value,new: Value) -> Bool {
+        return OSAtomicCompareAndSwap64Barrier(old, new, point)
+    }
+}
+
+public struct UnsafeAtomicBool {
+    private var atomic: UnsafeAtomic<Int32>
+    
+    public var bool: Bool {
+        atomic.value == 1
+    }
+    
+    init(_ bool: Bool = false) {
+        atomic = UnsafeAtomic(bool ? 1 : 0)
+    }
+    
+    public func deinititalize() {
+        atomic.deinititalize()
+    }
+    
+    public func `true`()  {
+        if !bool {
+            atomic.increment()
+        }
+    }
+    
+    public func `false`() {
+        if bool {
+            atomic.decrement()
+        }
+    }
+    
+    public func toggle() {
+        if bool {
+            atomic.decrement()
+        }else {
+            atomic.increment()
+        }
+    }
 }
