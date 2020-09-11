@@ -11,7 +11,7 @@ Pod::Spec.new do |s|
   s.source           = { :git => 'https://github.com/GodL/Atomic.git', :tag => s.version.to_s }
 
   s.ios.deployment_target = '8.0'
-  s.source_files = 'Atmoic/Atomic/**.{swift,h}'
+  s.source_files = 'Atomic/Atomic/**.{swift,h}'
   
   s.swift_version = '5'
 end
