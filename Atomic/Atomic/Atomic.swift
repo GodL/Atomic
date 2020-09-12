@@ -153,7 +153,7 @@ public struct UnsafeAtomic<Value> {
     public var value: Value {
         point.pointee
     }
-    
+        
     public func deinititalize() {
         point.deinitialize(count: 1)
         point.deallocate()
@@ -162,7 +162,7 @@ public struct UnsafeAtomic<Value> {
 
 extension UnsafeAtomic where Value == Int32 {
     
-    init(_ value: Value) {
+    public init(_ value: Value) {
         point.initialize(to: value)
     }
     
@@ -183,7 +183,7 @@ extension UnsafeAtomic where Value == Int32 {
 }
 
 extension UnsafeAtomic where Value == Int64 {
-    init(_ value: Value) {
+    public init(_ value: Value) {
         point.initialize(to: value)
     }
     
@@ -210,7 +210,7 @@ public struct UnsafeAtomicBool {
         atomic.value == 1
     }
     
-    init(_ bool: Bool = false) {
+    public init(_ bool: Bool = false) {
         atomic = UnsafeAtomic(bool ? 1 : 0)
     }
     
