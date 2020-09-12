@@ -218,23 +218,19 @@ public struct UnsafeAtomicBool {
         atomic.deinititalize()
     }
     
-    public func `true`()  {
-        if !bool {
-            atomic.increment()
-        }
+    public func `true`() -> Bool  {
+        return atomic.cas(old: 0, new: 1)
     }
     
-    public func `false`() {
-        if bool {
-            atomic.decrement()
-        }
+    public func `false`() -> Bool {
+        return atomic.cas(old: 1, new: 0)
     }
     
-    public func toggle() {
+    public func toggle() -> Bool {
         if bool {
-            atomic.decrement()
+            return atomic.cas(old: 1, new: 0)
         }else {
-            atomic.increment()
+            return atomic.cas(old: 0, new: 1)
         }
     }
 }

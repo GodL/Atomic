@@ -2,7 +2,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'Atomicity'
-  s.version          = '1.0.2'
+  s.version          = '1.0.3'
   s.summary          = 'Atomicity lock'
 
   s.homepage         = 'https://github.com/GodL/Atomic'
